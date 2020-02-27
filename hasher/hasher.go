@@ -101,6 +101,7 @@ func HashChgHourlyGzip(gzipIn, csvOut string, msisdnColumnIndex int) {
 	// Set for delimiter type of '|'
 	// Use single quote to preserve as rune object
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
@@ -247,6 +248,7 @@ func HashChgMonthlyGzip(gzipIn, csvOut string, msisdnColumnIndex int) {
 	// Set for delimiter type of '|'
 	// Use single quote so it will still be preserved as a rune object
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
@@ -400,6 +402,7 @@ func HashChgSubsInfoGzip(gzipIn, csvOut string, msisdnColumnIndex, imsiColumnInd
 	// Set for delimiter type of '|'
 	// use single quote to preserve as rune object
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
