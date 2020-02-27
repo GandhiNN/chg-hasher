@@ -67,20 +67,21 @@ func main() {
 	var msisdnIndex int
 
 	// Switch case of chgTypeFlag
-	if chgTypeFlag == "hourly" {
+	switch chgTypeFlag {
+	case "hourly":
 		msisdnIndex = 2 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
 		chghasher.HashChgHourly(csvInFileName, csvOutFileName, msisdnIndex)
-	} else if chgTypeFlag == "monthly" {
+	case "monthly":
 		msisdnIndex = 1 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
 		chghasher.HashChgMonthly(csvInFileName, csvOutFileName, msisdnIndex)
-	} else if chgTypeFlag == "subs" {
+	case "subs":
 		imsiIndex := 1  // zero indexed
 		msisdnIndex = 0 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v and IMSI Index is : %v\n", csvInFileName, msisdnIndex, imsiIndex)
 		chghasher.HashChgSubsInfo(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
-	} else { // chg type can only contains the above values
+	default:
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
