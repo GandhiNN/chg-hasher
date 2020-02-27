@@ -24,8 +24,9 @@ func HashChgHourly(csvIn, csvOut string, msisdnColumnIndex int) {
 	// Set the reader object to accept varying number of CSV fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// Use single quote to preserve as rune object
+	// Use single quote to preserve as rune object and use Lazy Quotes
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
@@ -99,7 +100,7 @@ func HashChgHourlyGzip(gzipIn, csvOut string, msisdnColumnIndex int) {
 	// Set the reader object to accept varying number of CSV fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// Use single quote to preserve as rune object
+	// Use single quote to preserve as rune object and use Lazy Quotes
 	r.Comma = '|'
 	r.LazyQuotes = true
 
@@ -169,8 +170,9 @@ func HashChgMonthly(csvIn, csvOut string, msisdnColumnIndex int) {
 	// Set reader for varying number of fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// Use single quote so it will still be preserved as a rune object
+	// Use single quote so it will still be preserved as a rune object and use Lazy Quotes
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
@@ -246,7 +248,7 @@ func HashChgMonthlyGzip(gzipIn, csvOut string, msisdnColumnIndex int) {
 	// Set reader for varying number of fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// Use single quote so it will still be preserved as a rune object
+	// Use single quote so it will still be preserved as a rune object and use Lazy Quotes
 	r.Comma = '|'
 	r.LazyQuotes = true
 
@@ -318,8 +320,9 @@ func HashChgSubsInfo(csvIn, csvOut string, msisdnColumnIndex, imsiColumnIndex in
 	// Set reader for varying number of fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// use single quote to preserve as rune object
+	// use single quote to preserve as rune object and use Lazy Quotes
 	r.Comma = '|'
+	r.LazyQuotes = true
 
 	// Setup CSV writer
 	cOut, err := os.Create(csvOut)
@@ -400,7 +403,7 @@ func HashChgSubsInfoGzip(gzipIn, csvOut string, msisdnColumnIndex, imsiColumnInd
 	// Set reader for varying number of fields
 	r.FieldsPerRecord = -1
 	// Set for delimiter type of '|'
-	// use single quote to preserve as rune object
+	// use single quote to preserve as rune object and use Lazy Quotes
 	r.Comma = '|'
 	r.LazyQuotes = true
 
