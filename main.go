@@ -11,7 +11,7 @@ import (
 )
 
 // Flag initialisation
-var fileNameFlag, chgTypeFlag string
+var fileNameFlag, chgTypeFlag, compression string
 
 func init() {
 	// Set logging syntax
@@ -22,6 +22,7 @@ func init() {
 	// Set CLI input flags
 	flag.StringVar(&fileNameFlag, "filename", "", "[REQUIRED] Name of the CHG file to be hashed")
 	flag.StringVar(&chgTypeFlag, "type", "", "[REQUIRED] CHG type of the file to be hashed. Possible options : {hourly | monthly | subs}")
+	flag.StringVar(&compression, "compression", "plain", "Compression type of input file. Either 'gzip' or 'plain' (default=plain)")
 }
 
 func main() {
@@ -56,10 +57,12 @@ func main() {
 
 	// File name is fed from the flag argument
 	csvInFileName := fileNameFlag
+	compressionType := compression
 	csvOutFileName := csvInFileName + ".hashed.out"
 
 	// Logging
 	log.Printf("Processing CHG file input :%v\n", csvInFileName)
+	log.Printf("CHG compression : %v\n", compressionType)
 	log.Printf("CHG Type is : %v\n", chgTypeFlag)
 	log.Printf("Hashed CHG is written to : %v\n", csvOutFileName)
 
@@ -69,18 +72,30 @@ func main() {
 	// Switch case of chgTypeFlag
 	switch chgTypeFlag {
 	case "hourly":
-		msisdnIndex = 2 // zero indexed
+		msisdnIndex = 2
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
-		chghasher.HashChgHourly(csvInFileName, csvOutFileName, msisdnIndex)
+		if compressionType == "gzip" {
+			chghasher.HashChgHourlyGzip(csvInFileName, csvOutFileName, msisdnIndex)
+		} else {
+			chghasher.HashChgHourly(csvInFileName, csvOutFileName, msisdnIndex)
+		}
 	case "monthly":
 		msisdnIndex = 1 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
-		chghasher.HashChgMonthly(csvInFileName, csvOutFileName, msisdnIndex)
+		if compressionType == "gzip" {
+			chghasher.HashChgMonthlyGzip(csvInFileName, csvOutFileName, msisdnIndex)
+		} else {
+			chghasher.HashChgMonthly(csvInFileName, csvOutFileName, msisdnIndex)
+		}
 	case "subs":
 		imsiIndex := 1  // zero indexed
 		msisdnIndex = 0 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v and IMSI Index is : %v\n", csvInFileName, msisdnIndex, imsiIndex)
-		chghasher.HashChgSubsInfo(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
+		if compressionType == "gzip" {
+			chghasher.HashChgSubsInfoGzip(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
+		} else {
+			chghasher.HashChgSubsInfo(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
+		}
 	default:
 		flag.PrintDefaults()
 		os.Exit(1)
