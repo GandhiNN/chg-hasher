@@ -96,6 +96,14 @@ func main() {
 		} else {
 			chghasher.HashChgSubsInfo(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
 		}
+	case "upcc":
+		msisdnIndex := 2
+		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
+		if compressionType == "gzip" {
+			chghasher.HashUpccHourlyGzip(csvInFileName, csvOutFileName, msisdnIndex)
+		} else {
+			chghasher.HashUpccHourly(csvInFileName, csvOutFileName, msisdnIndex)
+		}
 	default:
 		flag.PrintDefaults()
 		os.Exit(1)
