@@ -21,8 +21,8 @@ func init() {
 
 	// Set CLI input flags
 	flag.StringVar(&fileNameFlag, "filename", "", "[REQUIRED] Name of the CHG file to be hashed")
-	flag.StringVar(&chgTypeFlag, "type", "", "[REQUIRED] CHG type of the file to be hashed. Possible options : {hourly | monthly | subs}")
-	flag.StringVar(&compression, "compression", "plain", "Compression type of input file. Either 'gzip' or 'plain' (default=plain)")
+	flag.StringVar(&chgTypeFlag, "type", "", "[REQUIRED] CHG type of the file to be hashed. Available options : {hourly | monthly | subs | upcc}")
+	flag.StringVar(&compression, "compression", "plain", "Compression type of input file. Either 'gzip' or 'plain'")
 }
 
 func main() {
