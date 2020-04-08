@@ -12,6 +12,7 @@ import (
 
 // Flag initialisation
 var fileNameFlag, chgTypeFlag, compression string
+var revenue bool
 
 func init() {
 	// Set logging syntax
@@ -23,6 +24,7 @@ func init() {
 	flag.StringVar(&fileNameFlag, "filename", "", "[REQUIRED] Name of the CHG file to be hashed")
 	flag.StringVar(&chgTypeFlag, "type", "", "[REQUIRED] CHG type of the file to be hashed. Available options : {hourly | monthly | subs | upcc}")
 	flag.StringVar(&compression, "compression", "plain", "Compression type of input file. Either 'gzip' or 'plain'")
+	flag.BoolVar(&revenue, "revenue", false, "Invoke hashing of revenue data")
 }
 
 func main() {
@@ -39,7 +41,7 @@ func main() {
 		fmt.Println("=====")
 		fmt.Println("Usage")
 		fmt.Println("=====")
-		fmt.Println("./msisdn_md5_hasher -filename=<csv_file_name> -type=<chg_type>")
+		fmt.Println("./msisdn_md5_hasher -filename=<csv_file_name> -type=<chg_type> -revenue=<true|false>")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -50,7 +52,7 @@ func main() {
 		fmt.Println("=====")
 		fmt.Println("Usage")
 		fmt.Println("=====")
-		fmt.Println("./msisdn_md5_hasher -filename=<csv_file_name> -type=<chg_type>")
+		fmt.Println("./msisdn_md5_hasher -filename=<csv_file_name> -type=<chg_type> revenue=<true|false>")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -97,7 +99,12 @@ func main() {
 			chghasher.HashChgSubsInfo(csvInFileName, csvOutFileName, msisdnIndex, imsiIndex)
 		}
 	case "upcc":
-		msisdnIndex := 2
+		var msisdnIndex int
+		if revenue == true {
+			msisdnIndex = 1
+		} else {
+			msisdnIndex = 2
+		}
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
 		if compressionType == "gzip" {
 			chghasher.HashUpccHourlyGzip(csvInFileName, csvOutFileName, msisdnIndex)
