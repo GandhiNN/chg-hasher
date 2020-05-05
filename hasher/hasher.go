@@ -10,6 +10,77 @@ import (
 	"os"
 )
 
+// HashHvc is a function that accepts a CSV file containing HVC MSISDNs,
+// and replace the content of MSISDN column with its hashed value using
+// the same logic with UPCC hashing.
+func HashHvc(csvIn, csvOut string, msisdnColumnIndex int) {
+	// Setup CSV reader
+	cIn, err := os.Open(csvIn)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cIn.Close()
+
+	r := csv.NewReader(cIn)
+	// Set the reader object to accept varying number of CSV fields
+	r.FieldsPerRecord = -1
+	// Set for delimiter type of ','
+	// Use single quote to preserve as rune object and use Lazy Quotes
+	r.Comma = ','
+	r.LazyQuotes = true
+
+	// Setup CSV writer
+	cOut, err := os.Create(csvOut)
+	if err != nil {
+		log.Fatal("Unable to open output file")
+	}
+	w := csv.NewWriter(cOut)
+	// Use '|' delimiter for the writer object
+	w.Comma = '|'
+	defer cOut.Close()
+
+	// Handle CSV header
+	rec, err := r.Read()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Check error for writer object creation
+	if err = w.Write(rec); err != nil {
+		log.Fatal(err)
+	}
+
+	// Loop CSV file per line
+	for {
+		rec, err = r.Read()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			log.Fatal(err)
+		}
+
+		// Get MSISDN value based on the column number provided
+		// add a newline char at the end of string to cater with
+		// "echo $msisdn | md5sum" logic.
+		msisdn := []byte(rec[msisdnColumnIndex] + "\n")
+
+		// Hash the MSISDN. If using md5 then it will produce a [16]byte type.
+		// We reconvert the value to readable format (Hex-String-Encoded)
+		msisdnHashed := md5.Sum([]byte(msisdn))
+		msisdnHashedString := hex.EncodeToString(msisdnHashed[:])
+
+		// Replace the original MSISDN column with hashed MSISDN
+		rec[msisdnColumnIndex] = msisdnHashedString
+
+		// Check error for writer object creation
+		if err = w.Write(rec); err != nil {
+			log.Fatal(err)
+		}
+		w.Flush()
+	}
+}
+
 // HashChgHourly is a function that accepts a hourly CHG file (plain text),
 // and replace the content of MSISDN column with its hashed value.
 func HashChgHourly(csvIn, csvOut string, msisdnColumnIndex int) {
