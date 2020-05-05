@@ -115,7 +115,6 @@ func main() {
 		msisdnIndex := 0 // zero indexed
 		log.Printf("MSISDN Index in %v is : %v\n", csvInFileName, msisdnIndex)
 		if compressionType == "gzip" {
-			chghasher.HashUpccHourlyGzip(csvInFileName, csvOutFileName, msisdnIndex)
 		} else {
 			chghasher.HashHvc(csvInFileName, csvOutFileName, msisdnIndex)
 		}
